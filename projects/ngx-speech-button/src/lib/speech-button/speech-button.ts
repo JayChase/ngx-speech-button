@@ -17,8 +17,8 @@ export type SpeechRecognitionConfig = Partial<
 >;
 
 @Directive({
-  selector: '[appSpeechButton]',
-  exportAs: 'appSpeechButton',
+  selector: '[ngxSpeechButton]',
+  exportAs: 'ngxSpeechButton',
   host: {
     '(click)': 'onClick($event)',
   },
@@ -51,7 +51,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton [config]="{ lang: 'en-US', continuous: false }">🎤</button>
+   * <button ngxSpeechButton [config]="{ lang: 'en-US', continuous: false }">🎤</button>
    * ```
    */
   config = input<SpeechRecognitionConfig>({});
@@ -62,7 +62,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton #speech="appSpeechButton" [hidden]="!speech.available()">🎤</button>
+   * <button ngxSpeechButton #speech="ngxSpeechButton" [hidden]="!speech.available()">🎤</button>
    * ```
    */
   available = signal<boolean>(false);
@@ -76,7 +76,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton #speech="appSpeechButton">
+   * <button ngxSpeechButton #speech="ngxSpeechButton">
    *   {{ speech.listening() ? '🔴 Listening...' : '🎤' }}
    * </button>
    * ```
@@ -90,7 +90,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton (transcriptChanged)="liveText = $event">🎤</button>
+   * <button ngxSpeechButton (transcriptChanged)="liveText = $event">🎤</button>
    * ```
    */
   transcriptChanged = output<string>();
@@ -101,7 +101,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton (transcriptCompleted)="onComplete($event)">🎤</button>
+   * <button ngxSpeechButton (transcriptCompleted)="onComplete($event)">🎤</button>
    * ```
    */
   transcriptCompleted = output<string>();
@@ -113,7 +113,7 @@ export class SpeechButton implements OnInit {
    *
    * @example
    * ```html
-   * <button appSpeechButton (error)="onSpeechError($event)">🎤</button>
+   * <button ngxSpeechButton (error)="onSpeechError($event)">🎤</button>
    * ```
    */
   error = output<SpeechRecognitionErrorEvent>();

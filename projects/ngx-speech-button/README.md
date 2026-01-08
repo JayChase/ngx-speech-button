@@ -43,7 +43,7 @@ The Web Speech API is supported in modern browsers. Check [Can I Use](https://ca
 
 ### Basic Usage
 
-Add the `appSpeechButton` directive to any clickable element to enable voice input.
+Add the `ngxSpeechButton` directive to any clickable element to enable voice input.
 
 ```typescript
 import { Component } from '@angular/core';
@@ -53,7 +53,7 @@ import { SpeechButton } from 'ngx-speech-button';
   selector: 'app-voice-input',
   imports: [SpeechButton],
   template: `
-    <button appSpeechButton #speech="appSpeechButton" (transcriptCompleted)="onTranscript($event)">
+    <button ngxSpeechButton #speech="ngxSpeechButton" (transcriptCompleted)="onTranscript($event)">
       {{ speech.listening() ? '🔴 Listening...' : '🎤' }}
     </button>
     <p>Transcript: {{ transcript }}</p>
@@ -78,7 +78,7 @@ Use `transcriptChanged` to receive updates as the user speaks:
   imports: [SpeechButton],
   template: `
     <button
-      appSpeechButton
+      ngxSpeechButton
       (transcriptChanged)="liveText = $event"
       (transcriptCompleted)="finalText = $event"
     >
@@ -104,7 +104,7 @@ Configure the SpeechRecognition API with the `config` input:
   imports: [SpeechButton],
   template: `
     <button
-      appSpeechButton
+      ngxSpeechButton
       [config]="{ lang: 'en-US', continuous: false, interimResults: true }"
       (transcriptCompleted)="onComplete($event)"
     >
@@ -128,7 +128,7 @@ Handle speech recognition errors with the `error` output:
   selector: 'app-error-handling',
   imports: [SpeechButton],
   template: `
-    <button appSpeechButton (transcriptCompleted)="onComplete($event)" (error)="onError($event)">
+    <button ngxSpeechButton (transcriptCompleted)="onComplete($event)" (error)="onError($event)">
       🎤 Speak
     </button>
     @if (errorMessage) {
@@ -157,7 +157,7 @@ For advanced use cases, access the underlying `SpeechRecognition` instance:
 @Component({
   selector: 'app-advanced',
   imports: [SpeechButton],
-  template: ` <button appSpeechButton #speech="appSpeechButton">🎤</button> `,
+  template: ` <button ngxSpeechButton #speech="ngxSpeechButton">🎤</button> `,
 })
 export class AdvancedComponent implements AfterViewInit {
   @ViewChild('speech') speechButton!: SpeechButton;
@@ -181,8 +181,8 @@ Hide the button when the Web Speech API is not available:
 
 ```html
 <button
-  appSpeechButton
-  #speech="appSpeechButton"
+  ngxSpeechButton
+  #speech="ngxSpeechButton"
   [hidden]="!speech.available()"
   (transcriptCompleted)="onComplete($event)"
 >
@@ -198,10 +198,10 @@ Hide the button when the Web Speech API is not available:
 
 ### SpeechButton Directive
 
-| Selector | `[appSpeechButton]` |
+| Selector | `[ngxSpeechButton]` |
 | -------- | ------------------- |
 
-| Export As | `appSpeechButton` |
+| Export As | `ngxSpeechButton` |
 | --------- | ----------------- |
 
 #### Inputs

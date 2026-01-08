@@ -73,7 +73,7 @@ function createMockErrorEvent(error: SpeechRecognitionErrorCode): SpeechRecognit
 }
 
 @Component({
-  template: `<button appSpeechButton [config]="config"></button>`,
+  template: `<button ngxSpeechButton [config]="config"></button>`,
   imports: [SpeechButton],
 })
 class TestHostComponent {
@@ -165,7 +165,7 @@ describe('SpeechButton', () => {
       mockWindow = createMockWindow(true);
 
       @Component({
-        template: `<button appSpeechButton [config]="config"></button>`,
+        template: `<button ngxSpeechButton [config]="config"></button>`,
         imports: [SpeechButton],
       })
       class ConfigTestComponent {
