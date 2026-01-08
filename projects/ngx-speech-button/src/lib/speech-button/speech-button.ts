@@ -84,16 +84,27 @@ export class SpeechButton implements OnInit {
   listening = toSignal(this.listening$);
 
   /**
-   * Emits the transcribed text from speech recognition.
-   * The transcript is a concatenation of all speech results captured
-   * during the current listening session.
+   * Emits the current transcript as it updates in real-time while the user speaks.
+   * The transcript accumulates all recognized text during the listening session.
+   * Enable `interimResults` in config for more frequent updates.
    *
    * @example
    * ```html
-   * <button appSpeechButton (transcriptReady)="onTranscript($event)">🎤</button>
+   * <button appSpeechButton (transcriptChanged)="liveText = $event">🎤</button>
    * ```
    */
-  transcriptReady = output<string>();
+  transcriptChanged = output<string>();
+
+  /**
+   * Emits the complete transcript when the user stops speaking or recognition ends.
+   * Use this for the final result after the listening session is complete.
+   *
+   * @example
+   * ```html
+   * <button appSpeechButton (transcriptCompleted)="onComplete($event)">🎤</button>
+   * ```
+   */
+  transcriptCompleted = output<string>();
 
   /**
    * Emits when a speech recognition error occurs.
@@ -141,14 +152,24 @@ export class SpeechButton implements OnInit {
         },
       });
 
+      let transcript = '';
+
       this.recognition.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = Array.from(event.results)
-          .map((result) => result[0].transcript)
-          .join('');
-        this.transcriptReady.emit(transcript);
+        let currentTranscript = '';
+
+        for (let i = 0; i < event.results.length; i++) {
+          currentTranscript += event.results[i][0].transcript;
+        }
+
+        transcript = currentTranscript;
+        this.transcriptChanged.emit(transcript);
       };
 
       this.recognition.onend = (event: Event) => {
+        if (transcript) {
+          this.transcriptCompleted.emit(transcript);
+        }
+        transcript = '';
         this.listeningSubject.next(false);
       };
 

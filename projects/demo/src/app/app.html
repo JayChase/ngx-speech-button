@@ -1,5 +1,5 @@
-<h1>ngx-speech-button</h1>
-<p class="mat-body-medium">
+<h1 class="mat-font-headline-lg">ngx-speech-button</h1>
+<p class="mat-font-body-md">
   Speech recognition {{ mic.available() ? 'supported.' : ' is not supported.' }}
 </p>
 <form class="demo__form" [formGroup]="formGroup">
@@ -25,7 +25,7 @@
       [disabled]="!mic.available()"
       class="demo__mic"
       [class.chat-request__mic--listening]="mic.listening()"
-      (transcriptReady)="write($event)"
+      (transcriptChanged)="write($event)"
     >
       <mat-icon>mic</mat-icon>
     </button>
