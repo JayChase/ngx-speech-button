@@ -27,8 +27,10 @@ Add voice recognition to any button with:
 ## Install
 
 ```bash
-npm install ngx-speech-button
+npm i -S ngx-speech-button && npm i -D @types/dom-speech-recognition
 ```
+
+> **Note:** The `@types/dom-speech-recognition` package provides TypeScript types for the Web Speech API and is required as a dev dependency.
 
 ## Compatibility
 

@@ -24,10 +24,10 @@
   "homepage": "https://github.com/JayChase/ngx-speech-button#readme",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/core": "^21.0.0",
+    "@types/dom-speech-recognition": "^0.0.7"
   },
   "dependencies": {
-    "@types/dom-speech-recognition": "^0.0.7",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
