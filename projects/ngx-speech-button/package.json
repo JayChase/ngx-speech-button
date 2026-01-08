@@ -6,6 +6,7 @@
     "@angular/core": "^21.0.0"
   },
   "dependencies": {
+    "@types/dom-speech-recognition": "^0.0.7",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
