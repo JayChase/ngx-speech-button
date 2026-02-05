@@ -7,6 +7,8 @@ import { NgWindow, WINDOW } from '../ng-window/ng-window';
 import { SpeechButton, SpeechRecognitionConfig } from './speech-button';
 
 // Mock SpeechRecognition
+let mockRecognitionInstance: MockSpeechRecognition | null = null;
+
 class MockSpeechRecognition {
   lang = '';
   continuous = false;
@@ -21,6 +23,10 @@ class MockSpeechRecognition {
   start = vi.fn();
   stop = vi.fn();
   abort = vi.fn();
+
+  constructor() {
+    mockRecognitionInstance = this;
+  }
 }
 
 function createMockWindow(hasSpeechRecognition = true): NgWindow {
@@ -34,7 +40,7 @@ function createMockWindow(hasSpeechRecognition = true): NgWindow {
 
 function createMockSpeechRecognitionEvent(
   transcripts: string[],
-  isFinal = true
+  isFinal = true,
 ): SpeechRecognitionEvent {
   const results = transcripts.map((transcript) => {
     const result = {
@@ -122,14 +128,14 @@ describe('SpeechButton', () => {
     });
 
     it('should create a SpeechRecognition instance', () => {
-      expect(directive.recognition).toBeTruthy();
+      expect(mockRecognitionInstance).toBeTruthy();
     });
 
     it('should apply default config values', () => {
-      expect(directive.recognition?.lang).toBe('en-GB');
-      expect(directive.recognition?.continuous).toBe(true);
-      expect(directive.recognition?.interimResults).toBe(false);
-      expect(directive.recognition?.maxAlternatives).toBe(1);
+      expect(mockRecognitionInstance?.lang).toBe('en-GB');
+      expect(mockRecognitionInstance?.continuous).toBe(true);
+      expect(mockRecognitionInstance?.interimResults).toBe(false);
+      expect(mockRecognitionInstance?.maxAlternatives).toBe(1);
     });
   });
 
@@ -155,7 +161,7 @@ describe('SpeechButton', () => {
     });
 
     it('should not create a SpeechRecognition instance', () => {
-      expect(directive.recognition).toBeNull();
+      expect(directive.available()).toBe(false);
     });
   });
 
@@ -186,12 +192,12 @@ describe('SpeechButton', () => {
       configFixture.detectChanges();
 
       const directiveEl = configFixture.debugElement.query(By.directive(SpeechButton));
-      const configDirective = directiveEl.injector.get(SpeechButton);
+      directiveEl.injector.get(SpeechButton);
 
-      expect(configDirective.recognition?.lang).toBe('fr-FR');
-      expect(configDirective.recognition?.continuous).toBe(false);
-      expect(configDirective.recognition?.interimResults).toBe(true);
-      expect(configDirective.recognition?.maxAlternatives).toBe(3);
+      expect(mockRecognitionInstance?.lang).toBe('fr-FR');
+      expect(mockRecognitionInstance?.continuous).toBe(false);
+      expect(mockRecognitionInstance?.interimResults).toBe(true);
+      expect(mockRecognitionInstance?.maxAlternatives).toBe(3);
     });
   });
 
@@ -209,7 +215,7 @@ describe('SpeechButton', () => {
       const button = fixture.debugElement.query(By.css('button'));
       button.triggerEventHandler('click', new MouseEvent('click'));
 
-      expect(directive.recognition?.start).toHaveBeenCalled();
+      expect(mockRecognitionInstance?.start).toHaveBeenCalled();
     });
 
     it('should stop recognition when listening becomes false', () => {
@@ -220,7 +226,7 @@ describe('SpeechButton', () => {
       // Stop listening
       button.triggerEventHandler('click', new MouseEvent('click'));
 
-      expect(directive.recognition?.stop).toHaveBeenCalled();
+      expect(mockRecognitionInstance?.stop).toHaveBeenCalled();
     });
   });
 
@@ -230,7 +236,7 @@ describe('SpeechButton', () => {
       directive.transcriptChanged.subscribe(transcriptChangedSpy);
 
       const mockEvent = createMockSpeechRecognitionEvent(['Hello world']);
-      directive.recognition?.onresult?.(mockEvent);
+      mockRecognitionInstance?.onresult?.(mockEvent);
 
       expect(transcriptChangedSpy).toHaveBeenCalledWith('Hello world');
     });
@@ -240,7 +246,7 @@ describe('SpeechButton', () => {
       directive.transcriptChanged.subscribe(transcriptChangedSpy);
 
       const mockEvent = createMockSpeechRecognitionEvent(['Hello ', 'world']);
-      directive.recognition?.onresult?.(mockEvent);
+      mockRecognitionInstance?.onresult?.(mockEvent);
 
       expect(transcriptChangedSpy).toHaveBeenCalledWith('Hello world');
     });
@@ -253,10 +259,10 @@ describe('SpeechButton', () => {
 
       // Simulate speech result
       const mockEvent = createMockSpeechRecognitionEvent(['Hello world']);
-      directive.recognition?.onresult?.(mockEvent);
+      mockRecognitionInstance?.onresult?.(mockEvent);
 
       // Simulate recognition end
-      directive.recognition?.onend?.(new Event('end'));
+      mockRecognitionInstance?.onend?.(new Event('end'));
 
       expect(transcriptCompletedSpy).toHaveBeenCalledWith('Hello world');
     });
@@ -266,7 +272,7 @@ describe('SpeechButton', () => {
       directive.transcriptCompleted.subscribe(transcriptCompletedSpy);
 
       // Simulate recognition end without any results
-      directive.recognition?.onend?.(new Event('end'));
+      mockRecognitionInstance?.onend?.(new Event('end'));
 
       expect(transcriptCompletedSpy).not.toHaveBeenCalled();
     });
@@ -276,11 +282,11 @@ describe('SpeechButton', () => {
       directive.transcriptCompleted.subscribe(transcriptCompletedSpy);
 
       // First session
-      directive.recognition?.onresult?.(createMockSpeechRecognitionEvent(['First']));
-      directive.recognition?.onend?.(new Event('end'));
+      mockRecognitionInstance?.onresult?.(createMockSpeechRecognitionEvent(['First']));
+      mockRecognitionInstance?.onend?.(new Event('end'));
 
       // Second session with no results
-      directive.recognition?.onend?.(new Event('end'));
+      mockRecognitionInstance?.onend?.(new Event('end'));
 
       expect(transcriptCompletedSpy).toHaveBeenCalledTimes(1);
       expect(transcriptCompletedSpy).toHaveBeenCalledWith('First');
@@ -293,7 +299,7 @@ describe('SpeechButton', () => {
       expect(directive.listening()).toBe(true);
 
       // Simulate recognition end
-      directive.recognition?.onend?.(new Event('end'));
+      mockRecognitionInstance?.onend?.(new Event('end'));
 
       expect(directive.listening()).toBe(false);
     });
@@ -305,7 +311,7 @@ describe('SpeechButton', () => {
       directive.error.subscribe(errorSpy);
 
       const mockError = createMockErrorEvent('no-speech');
-      directive.recognition?.onerror?.(mockError);
+      mockRecognitionInstance?.onerror?.(mockError);
 
       expect(errorSpy).toHaveBeenCalledWith(mockError);
     });
@@ -315,7 +321,7 @@ describe('SpeechButton', () => {
       directive.error.subscribe(errorSpy);
 
       const mockError = createMockErrorEvent('aborted');
-      directive.recognition?.onerror?.(mockError);
+      mockRecognitionInstance?.onerror?.(mockError);
 
       expect(errorSpy).not.toHaveBeenCalled();
     });
@@ -333,10 +339,68 @@ describe('SpeechButton', () => {
 
       errors.forEach((errorCode) => {
         const mockError = createMockErrorEvent(errorCode);
-        directive.recognition?.onerror?.(mockError);
+        mockRecognitionInstance?.onerror?.(mockError);
       });
 
       expect(errorSpy).toHaveBeenCalledTimes(4);
+    });
+  });
+
+  describe('abort method', () => {
+    it('should call recognition.abort() when listening', () => {
+      const button = fixture.debugElement.query(By.css('button'));
+      button.triggerEventHandler('click', new MouseEvent('click'));
+
+      expect(directive.listening()).toBe(true);
+
+      directive.abort();
+
+      expect(mockRecognitionInstance?.abort).toHaveBeenCalled();
+    });
+
+    it('should not call recognition.abort() when not listening', () => {
+      expect(directive.listening()).toBe(false);
+
+      directive.abort();
+
+      expect(mockRecognitionInstance?.abort).not.toHaveBeenCalled();
+    });
+
+    it('should not emit transcriptCompleted when aborted', () => {
+      const transcriptCompletedSpy = vi.fn();
+      directive.transcriptCompleted.subscribe(transcriptCompletedSpy);
+
+      const button = fixture.debugElement.query(By.css('button'));
+      button.triggerEventHandler('click', new MouseEvent('click'));
+
+      // Simulate speech result
+      const mockEvent = createMockSpeechRecognitionEvent(['Hello world']);
+      mockRecognitionInstance?.onresult?.(mockEvent);
+
+      // Abort instead of waiting for natural end
+      directive.abort();
+
+      // Simulate the abort triggering an error event (which is filtered out)
+      const abortError = createMockErrorEvent('aborted');
+      mockRecognitionInstance?.onerror?.(abortError);
+
+      expect(transcriptCompletedSpy).not.toHaveBeenCalled();
+    });
+
+    it('should filter out aborted error when abort is called', () => {
+      const errorSpy = vi.fn();
+      directive.error.subscribe(errorSpy);
+
+      const button = fixture.debugElement.query(By.css('button'));
+      button.triggerEventHandler('click', new MouseEvent('click'));
+
+      directive.abort();
+
+      // Simulate the abort triggering an error event
+      const abortError = createMockErrorEvent('aborted');
+      mockRecognitionInstance?.onerror?.(abortError);
+
+      expect(errorSpy).not.toHaveBeenCalled();
     });
   });
 });

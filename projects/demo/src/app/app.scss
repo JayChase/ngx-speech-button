@@ -7,5 +7,18 @@
   }
   &__mic {
     margin-right: 0.5em;
+
+    &--listening {
+      background: var(--mat-sys-primary-container);
+    }
+  }
+
+  &__abort {
+    margin: 0 0.5em;
+    color: var(--mat-sys-on-error-container);
+    --mat-icon-button-state-layer-color: var(--mat-sys-error);
+  }
+  &__transcript {
+    font: var(--mat-sys-body-medium);
   }
 }

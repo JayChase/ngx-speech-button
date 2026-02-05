@@ -3,6 +3,14 @@
 @use '@angular/material' as mat;
 
 html {
+  @include mat.system-classes();
+
+  h1 {
+    font: var(--mat-sys-headline-large);
+  }
+  h2 {
+    font: var(--mat-sys-headline-medium);
+  }
   @include mat.theme(
     (
       color: mat.$violet-palette,
@@ -10,6 +18,4 @@ html {
       density: 0,
     )
   );
-
-  @include mat.system-classes();
 }

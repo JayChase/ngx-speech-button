@@ -40,7 +40,7 @@ export class SpeechButton implements OnInit {
    * }
    * ```
    */
-  recognition: SpeechRecognition | null = null;
+  protected recognition: SpeechRecognition | null = null;
 
   /**
    * Configuration options for the SpeechRecognition API.
@@ -54,7 +54,7 @@ export class SpeechButton implements OnInit {
    * <button ngxSpeechButton [config]="{ lang: 'en-US', continuous: false }">🎤</button>
    * ```
    */
-  config = input<SpeechRecognitionConfig>({});
+  readonly config = input<SpeechRecognitionConfig>({});
 
   /**
    * Indicates whether the Web Speech API is available in the current browser.
@@ -65,7 +65,7 @@ export class SpeechButton implements OnInit {
    * <button ngxSpeechButton #speech="ngxSpeechButton" [hidden]="!speech.available()">🎤</button>
    * ```
    */
-  available = signal<boolean>(false);
+  readonly available = signal<boolean>(false);
 
   private listeningSubject = new BehaviorSubject<boolean>(false);
   private listening$ = this.listeningSubject.asObservable();
@@ -134,7 +134,7 @@ export class SpeechButton implements OnInit {
       const userConfig = this.config();
       Object.assign(this.recognition, {
         lang: this.window.navigator.language,
-        interimResults: false,
+        interimResults: true,
         continuous: true,
         maxAlternatives: 1,
         ...userConfig,
@@ -180,6 +180,34 @@ export class SpeechButton implements OnInit {
 
         this.error.emit(event);
       };
+    }
+  }
+
+  /**
+   * Immediately stops speech recognition and discards any pending results.
+   * Unlike `stop()`, which waits for the current recognition to complete,
+   * `abort()` terminates recognition immediately without emitting `transcriptCompleted`.
+   * This is useful for canceling recognition when the user navigates away or wants to cancel.
+   * Does nothing if recognition is not currently active.
+   *
+   * @example
+   * ```typescript
+   * @ViewChild('speech') speechButton!: SpeechButton;
+   *
+   * onCancel() {
+   *   this.speechButton.abort();
+   * }
+   * ```
+   *
+   * @example
+   * ```html
+   * <button ngxSpeechButton #speech="ngxSpeechButton">🎤</button>
+   * <button (click)="speech.abort()">Cancel</button>
+   * ```
+   */
+  abort() {
+    if (this.listening()) {
+      this.recognition?.abort();
     }
   }
 }

@@ -1,6 +1,6 @@
 /// <reference types="dom-speech-recognition" />
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpeechButton } from 'ngx-speech-button';
 
 @Component({
@@ -21,6 +22,7 @@ import { SpeechButton } from 'ngx-speech-button';
     MatCardModule,
     MatSnackBarModule,
     SpeechButton,
+    MatTooltipModule,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -28,14 +30,20 @@ import { SpeechButton } from 'ngx-speech-button';
 export class App {
   private matSnackBar = inject(MatSnackBar);
 
-  formGroup = new FormGroup({
+  protected formGroup = new FormGroup({
     prompt: new FormControl<string | null>(null, {
       validators: [],
     }),
   });
 
-  write(transcription: string) {
+  protected transcript = signal<string>('');
+
+  updateForm(transcription: string) {
     this.formGroup.controls.prompt.setValue(transcription);
+  }
+
+  updateTranscript(transcription: string) {
+    this.transcript.set(transcription);
   }
 
   onError(error: SpeechRecognitionErrorEvent) {
