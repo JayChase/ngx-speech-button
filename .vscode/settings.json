@@ -1,0 +1,8 @@
+{
+    "workbench.colorCustomizations": {
+        "terminal.ansiRed": "#f2bb00",
+        "terminal.ansiBrightRed": "#f2bb00",
+        "statusBar.noFolderBackground": "#073519",
+        "statusBar.noFolderForeground": "#F1FDF6"
+    }
+}
