@@ -28,7 +28,7 @@ jobs:
               run: npm ci
 
             - name: Build library
-              run: npm run build -- ngx-arrow-state
+              run: npm run build
 
             - name: Run tests with coverage
               run: npm test -- --coverage --no-watch
