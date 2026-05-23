@@ -10,6 +10,10 @@ Add voice recognition to any button with:
 - ⚙️ **Configurable** - Customize language, continuous mode, and more
 - 🔧 **Advanced access** - Direct access to the underlying SpeechRecognition instance
 
+## TL;DR
+
+Go straight to the demo on [StackBlitz](https://stackblitz.com/edit/ngx-speech-button-demo?file=app.html)
+
 ## Features
 
 - Works on any clickable element (buttons, icons, etc.)
@@ -33,7 +37,7 @@ npm i -S ngx-speech-button && npm i -D @types/dom-speech-recognition
 
 | Angular Version | Package Version |
 | --------------- | --------------- |
-| 21.x            | 0.0.x           |
+| 21.x            | ^1.0.0          |
 
 ## Browser Support
 
@@ -132,7 +136,7 @@ Handle speech recognition errors with the `error` output:
       🎤 Speak
     </button>
     @if (errorMessage) {
-    <p class="error">{{ errorMessage }}</p>
+      <p class="error">{{ errorMessage }}</p>
     }
   `,
 })
