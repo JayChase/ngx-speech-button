@@ -1,0 +1,60 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+{
+  "name": "ngDevCon",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "dockerFile": "Dockerfile",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "version": "latest",
+      "installBicep": true
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:latest": {},
+    "ghcr.io/devcontainers-extra/features/angular-cli:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/powershell:1": {},
+    "ghcr.io/azure/azure-dev/azd:latest": {},
+  },
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "shd101wyy.markdown-preview-enhanced",
+        "GitHub.vscode-github-actions",
+        "GitHub.copilot",
+        "ms-azuretools.vscode-docker",
+        "humao.rest-client",
+        "ms-azuretools.vscode-bicep",
+        "eamodio.gitlens",
+        "Gruntfuggly.todo-tree",
+        "tamasfe.even-better-toml",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+        "jebbs.plantuml",
+        "Angular.ng-template",
+        "DavidAnson.vscode-markdownlint",
+      ]
+    }
+  },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    8000,
+    4000,
+    7071,
+    4200
+  ],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "npm i -D",
+  "hostRequirements": {
+    "memory": "16gb"
+  }
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}

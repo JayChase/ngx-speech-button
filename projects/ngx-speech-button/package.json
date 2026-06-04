@@ -1,6 +1,6 @@
 {
   "name": "ngx-speech-button",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "An Angular directive that wraps the Web Speech API for easy voice input functionality",
   "keywords": [
     "angular",
@@ -12,7 +12,7 @@
     "transcript",
     "microphone"
   ],
-  "author": "Useful Software Solutions Ltd",
+  "author": "JayChase",
   "license": "MIT",
   "repository": {
     "type": "git",

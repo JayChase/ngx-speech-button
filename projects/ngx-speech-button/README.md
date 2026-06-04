@@ -37,8 +37,8 @@ npm i -S ngx-speech-button && npm i -D @types/dom-speech-recognition
 
 | Angular Version | Package Version |
 | --------------- | --------------- |
-| 22.x            | ^1.0.0          |
-| <=21.x          | Last release before Angular 22 support |
+| 22.x            | 4.0.0           |
+| <=21.x          | 3.0.x           |
 
 ## Browser Support
 
