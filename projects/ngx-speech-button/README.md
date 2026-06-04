@@ -37,7 +37,8 @@ npm i -S ngx-speech-button && npm i -D @types/dom-speech-recognition
 
 | Angular Version | Package Version |
 | --------------- | --------------- |
-| 21.x            | ^1.0.0          |
+| 22.x            | 4.0.0           |
+| <=21.x          | 3.0.x           |
 
 ## Browser Support
 
@@ -248,7 +249,7 @@ type SpeechRecognitionConfig = Partial<
 
 ## Requirements
 
-- Angular 21+
+- Angular 22+
 - Browser with Web Speech API support
 
 ## Development
